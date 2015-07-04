@@ -1,0 +1,48 @@
+# Copied from https://github.com/gliderlabs/docker-alpine
+
+general:
+  artifacts:
+    - "images"
+  branches:
+    ignore:
+      - /rootfs-.*/
+
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+    - "~/deps"
+  pre:
+    - if [[ ! -e ~/deps/bats_v0.4.0.tar.gz ]]; then mkdir -p ~/deps; curl -sSL -o ~/deps/bats_v0.4.0.tar.gz https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz; fi
+    - tar -xf ~/deps/bats_v0.4.0.tar.gz
+    - sudo bats-0.4.0/install.sh /usr/local
+  override:
+    - docker info
+    - if [[ -e ~/docker/builder.tar ]]; then docker load --input ~/docker/builder.tar; fi
+    - ./build:
+        parallel: true
+        files:
+          - versions/**/options
+    - mkdir -p ~/docker; docker save alpine-builder > ~/docker/builder.tar
+    - docker images
+
+test:
+  override:
+    - ./build test:
+        parallel: true
+        files:
+          - versions/**/options
+
+deployment:
+  hub:
+    branch: release
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD:
+          parallel: true
+      - ./build push:
+          parallel: true
+#      - ./build commit:
+#          parallel: true

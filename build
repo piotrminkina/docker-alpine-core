@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+
+[ -d builder/ ] || cp -r vendor/gliderlabs/docker-alpine/builder/ builder/
+source vendor/gliderlabs/docker-alpine/build

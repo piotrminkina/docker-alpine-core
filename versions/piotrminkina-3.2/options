@@ -1,0 +1,6 @@
+export RELEASE="v3.2"
+export MIRROR="http://dl-3.alpinelinux.org/alpine"
+export PACKAGES="alpine-baselayout,apk-tools,busybox,libc-utils,alpine-keys"
+export BUILD_OPTIONS="-s -t UTC -r ${RELEASE} -m ${MIRROR} -p ${PACKAGES}"
+export TAGS="piotrminkina/alpine-core:3.2 piotrminkina/alpine-core:latest"
+export PUSH_IMAGE="true"
