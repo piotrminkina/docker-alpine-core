@@ -5,7 +5,7 @@ setup() {
 @test "version is correct" {
   run docker run "piotrminkina/alpine-core:2.7" cat /etc/alpine-release
   [ $status -eq 0 ]
-  [ "${lines[0]}" = "2.7.9" ]
+  [[ "${lines[0]}" == "2.7."* ]]
 }
 
 @test "package installs cleanly" {

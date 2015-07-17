@@ -5,7 +5,7 @@ setup() {
 @test "version is correct" {
   run docker run "piotrminkina/alpine-core:3.0" cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.0.6" ]
+  [[ "${lines[2]}" == "VERSION_ID=3.0."* ]]
 }
 
 @test "package installs cleanly" {
